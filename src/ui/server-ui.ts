@@ -3,7 +3,7 @@ import * as Koa from "koa";
 import * as bodyParser from "koa-bodyparser";
 import * as koaLogger from "koa-logger-winston";
 import * as Router from "koa-router";
-import { uiLogger as logger } from "./logger";
+import { uiLogger as logger } from "../logger";
 
 import { routes } from "./temp";
 
