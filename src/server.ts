@@ -1,25 +1,16 @@
 import * as http from "http";
-import * as Koa from "koa";
-import * as bodyParser from "koa-bodyparser";
-import * as koaLogger from "koa-logger-winston";
-import * as Router from "koa-router";
 import config from "./config";
-import logger from "./logger";
+import * as loggers from "./logger";
+import { server as proxyServer } from "./server-proxy";
+import { server as uiServer } from "./server-ui";
 
-import { routes } from "./temp";
+function listen(server: http.Server, port: number, logger: loggers.LoggerInstance) {
+    logger.info(`Will now listen on ${port}.`);
+    server.on("listening", () => {
+        logger.info("Listening");
+    });
+    server.listen(port);
+}
 
-const router = new Router();
-router
-    .use(routes.routes())
-    .use(routes.allowedMethods());
-
-const app = new Koa()
-    .use(koaLogger(logger))
-    .use(bodyParser())
-    .use(router.routes());
-
-export const server = http.createServer(app.callback());
-
-const port = config.uiPort;
-logger.info(`Will now listen on ${port}.`);
-server.listen(port);
+listen(uiServer, config.uiPort, loggers.uiLogger);
+listen(proxyServer, config.proxyPort, loggers.proxyLogger);

@@ -27,4 +27,5 @@ function convertToInt(value: string): number {
 
 export default {
     uiPort: convertToInt(getEnvironmentVariable("UI_PORT", "7000")),
+    proxyPort: convertToInt(getEnvironmentVariable("PROXY_PORT", "7001")),
 };

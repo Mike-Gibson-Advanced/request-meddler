@@ -1,13 +1,19 @@
 import * as Winston from "winston";
 
-const logger = new Winston.Logger({
-    level: "debug",
-    transports: [
-        new Winston.transports.Console({
-            handleExceptions: true,
-        }),
-    ],
-    exitOnError: false,
-});
+function createLogger(label?: string) {
+    return new Winston.Logger({
+        level: "debug",
+        transports: [
+            new Winston.transports.Console({
+                handleExceptions: true,
+                label: label,
+            }),
+        ],
+        exitOnError: false,
+    });
+}
 
-export default logger;
+export { LoggerInstance } from "winston";
+export const defaultLogger = createLogger();
+export const uiLogger = createLogger("UI");
+export const proxyLogger = createLogger("Proxy");
