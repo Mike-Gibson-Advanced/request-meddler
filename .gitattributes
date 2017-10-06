@@ -1,0 +1,13 @@
+# Ensure all line endings are Unix-style
+* text eol=lf
+
+# Do not attempt conversion on the following binary file types
+*.dll binary
+*.eot binary
+*.exe binary
+*.png binary
+*.swf binary
+*.ttf binary
+*.vsdx binary
+*.node binary
+*.gif binary
