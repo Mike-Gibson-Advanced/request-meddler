@@ -3,7 +3,7 @@ import * as httpProxy from "http-proxy";
 import * as HttpProxyRules from "http-proxy-rules";
 import { proxyLogger as logger } from "../logger";
 import { config as rulesConfig } from "../rules";
-import { addHitRequest, addHitResponse /*, getState */ } from "../state";
+import { addHitRequest, addHitResponse, linkRulesTohit /*, getState */ } from "../state";
 
 const proxyRules = new HttpProxyRules({
     rules: {
@@ -50,7 +50,7 @@ export const server = http.createServer((req, res) => {
     if (target) {
         logger.debug(`Matched. Proxying to '${target}'.`);
 
-        const id = addHitRequest("temp", req);
+        const id = addHitRequest(req);
         // Attach identifier
         (<any>req)._hitId = id;
 
@@ -58,6 +58,8 @@ export const server = http.createServer((req, res) => {
 
         const rules = rulesConfig.findRules(req.url || "");
         logger.debug(getLogMessage(`Found ${rules.length} rule(s) for url '${req.url}'`));
+
+        linkRulesTohit(id, rules);
 
         const next = () => {
             logger.debug(getLogMessage(`Proxying request to '${target}'`));

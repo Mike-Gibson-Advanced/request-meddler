@@ -1,6 +1,6 @@
 import { IAction } from "./actions";
 
-interface IRule {
+export interface IRule {
     description: string;
     urlPattern: RegExp;
     action: IAction; // TODO: Array of actions?
