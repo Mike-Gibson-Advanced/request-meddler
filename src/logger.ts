@@ -7,6 +7,7 @@ function createLogger(label?: string) {
             new Winston.transports.Console({
                 handleExceptions: true,
                 label: label,
+                colorize: true,
             }),
         ],
         exitOnError: false,

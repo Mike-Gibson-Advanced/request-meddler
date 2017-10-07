@@ -35,7 +35,7 @@
     "compile:watch": "yarn run compile -- --watch",
     "build": "yarn run clean && yarn run lint && yarn run compile",
     "build:watch": "yarn run lint && yarn run compile:watch",
-    "debug:watch": "yarn run build && concurrently --kill-others \"yarn run build:watch\" \"nodemon --inspect=0.0.0.0:9229 dist/server.js\"",
+    "debug:watch": "yarn run build && concurrently --kill-others \"yarn run build:watch\" \"nodemon --inspect=0.0.0.0:9230 dist/server.js\"",
     "start": "node dist/server.js",
     "dev": "yarn run debug:watch"
   }

@@ -2,14 +2,15 @@ import * as http from "http";
 import * as httpProxy from "http-proxy";
 import * as HttpProxyRules from "http-proxy-rules";
 import { proxyLogger as logger } from "../logger";
-import { addHitRequest, addHitResponse, getState } from "../state";
+import { config as rulesConfig } from "../rules";
+import { addHitRequest, addHitResponse /*, getState */ } from "../state";
 
 const proxyRules = new HttpProxyRules({
     rules: {
         // '.*/api/': 'http://127.0.0.1:8888/api',
     },
-    // default: "http://127.0.0.1:8889",
-    default: "http://localhost:7000/api/temp",
+    default: "http://127.0.0.1:8889",
+    // default: "http://localhost:7000/api/temp",
 });
 
 const proxy = httpProxy.createProxy();
@@ -38,32 +39,51 @@ proxy.on("proxyRes", function(proxyRes, req, _res) {
         const hitId: number = (<any>req)._hitId;
         addHitResponse(hitId, proxyResData);
 
-        logger.info(JSON.stringify(getState()));
+        // logger.info(JSON.stringify(getState()));
     });
 });
 
 export const server = http.createServer((req, res) => {
-    logger.info(`matching '${req.url}' ...`);
+    logger.debug(`matching '${req.url}' ...`);
 
     const target = proxyRules.match(req);
     if (target) {
-        logger.info(`matched. Proxying to '${target}'.`);
+        logger.debug(`Matched. Proxying to '${target}'.`);
 
         const id = addHitRequest("temp", req);
-        // Attach identifier:
+        // Attach identifier
         (<any>req)._hitId = id;
 
-        return proxy.web(req, res, <any>{
-            target: target,
-            // https: true,
-            // secure: false,
-            // changeOrigin: true,
-            CUSTOM: "MIKE",
-        }, (e) => {
-            const error = `Error proxying request to ${target}: ${e.message}`;
-            logger.error(error);
-            writeError(res, error);
-        });
+        const getLogMessage = (message: string) => `[Request ${id}] ${message}`;
+
+        const rules = rulesConfig.findRules(req.url || "");
+        logger.debug(getLogMessage(`Found ${rules.length} rule(s) for url '${req.url}'`));
+
+        const next = () => {
+            logger.debug(getLogMessage(`Proxying request to '${target}'`));
+
+            return proxy.web(req, res, {
+                target: target,
+                // https: true,
+                // secure: false,
+                // changeOrigin: true,
+            }, (e) => {
+                const error = `Error proxying request to ${target}: ${e.message}`;
+                logger.error(getLogMessage(error));
+                writeError(res, error);
+            });
+        };
+
+        const startChain = rules.reverse().reduce((accumulator, current) => {
+            return () => {
+                logger.debug(
+                    getLogMessage(`[Rule '${current.description}'] Running action '${current.action.description}'`));
+                current.action.process(accumulator);
+            };
+        }, next);
+
+        startChain();
+        return;
     }
 
     writeError(res, "The request url and path did not match any of the listed rules");

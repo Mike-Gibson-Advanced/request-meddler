@@ -14,3 +14,13 @@ function listen(server: http.Server, port: number, logger: loggers.LoggerInstanc
 
 listen(uiServer, config.uiPort, loggers.uiLogger);
 listen(proxyServer, config.proxyPort, loggers.proxyLogger);
+
+// TEMP:
+import { config as rulesConfig } from "./rules";
+import { DelayAction } from "./rules/actions";
+
+rulesConfig.addRule({
+    description: "All API requests",
+    urlPattern: /\/api/,
+    action: new DelayAction(5000),
+});
