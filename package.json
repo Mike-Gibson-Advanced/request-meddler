@@ -11,11 +11,18 @@
     "@types/koa-logger": "^2.0.2",
     "@types/koa-router": "^7.0.21",
     "@types/node": "^6.0.65",
+    "@types/webpack": "^3.0.13",
     "@types/winston": "^2.3.3",
+    "awesome-typescript-loader": "^3.2.3",
     "concurrently": "^3.5.0",
+    "html-webpack-plugin": "^2.30.1",
+    "koa-webpack-middleware": "^1.0.7",
     "nodemon": "^1.12.1",
+    "raw-loader": "^0.5.1",
     "tslint": "^5.5.0",
-    "typescript": "^2.4.2"
+    "tslint-loader": "^3.5.3",
+    "typescript": "^2.4.2",
+    "webpack": "^3.6.0"
   },
   "dependencies": {
     "http-proxy": "^1.16.2",
@@ -26,11 +33,12 @@
     "koa-logger-winston": "^0.0.2",
     "koa-router": "^7.2.1",
     "rimraf": "^2.6.1",
+    "vue": "^2.4.4",
     "winston": "^2.3.1"
   },
   "scripts": {
     "clean": "rimraf dist",
-    "lint": "tslint --format verbose --project ./tsconfig.json --type-check \"src/**/*.ts\"",
+    "lint": "tslint --format verbose --project ./tsconfig.json --type-check",
     "compile": "echo Using TypeScript && tsc --version && tsc --pretty",
     "compile:watch": "yarn run compile -- --watch",
     "build": "yarn run clean && yarn run lint && yarn run compile",
