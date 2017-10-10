@@ -1,7 +1,4 @@
-export interface IAction {
-    readonly description: string;
-    process(proxyRequest: () => void): void;
-}
+import { IAction } from "./action";
 
 export class DelayAction implements IAction {
     private delayInMilliseconds: number;

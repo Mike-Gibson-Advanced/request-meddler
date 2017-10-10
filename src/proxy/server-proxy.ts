@@ -78,9 +78,11 @@ export const server = http.createServer((req, res) => {
 
         const startChain = rules.reverse().reduce((accumulator, current) => {
             return () => {
-                logger.debug(
-                    getLogMessage(`[Rule '${current.description}'] Running action '${current.action.description}'`));
-                current.action.process(accumulator);
+                const processingContext = {
+                    log: (message: string) => logger.debug(getLogMessage(`[Rule '${current.description}'] ${message}`)),
+                };
+                processingContext.log(`Running action '${current.action.description}'`);
+                current.action.process(accumulator, processingContext);
             };
         }, next);
 

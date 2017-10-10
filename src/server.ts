@@ -17,10 +17,22 @@ listen(proxyServer, config.proxyPort, loggers.proxyLogger);
 
 // TEMP:
 import { config as rulesConfig } from "./rules";
-import { DelayAction } from "./rules/actions";
+import { DelayAction, ForceOutOfOrderAction } from "./rules/actions";
 
 rulesConfig.addRule({
     description: "All API requests",
-    urlPattern: /\/api/,
-    action: new DelayAction(5000),
+    urlPattern: /\/api/i,
+    action: new DelayAction(1),
+});
+
+rulesConfig.addRule({
+    description: "Care needs list",
+    urlPattern: /\/api\/serviceusers\/fake_user\/careneeds/i,
+    action: new DelayAction(1),
+});
+
+rulesConfig.addRule({
+    description: "Care needs list",
+    urlPattern: /\/api\/serviceusers\/fake_user\/careneeds/i,
+    action: new ForceOutOfOrderAction(4000),
 });
