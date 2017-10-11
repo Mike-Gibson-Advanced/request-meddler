@@ -48,3 +48,22 @@ const app = new Koa()
     // }));
 
 export const server = http.createServer(app.callback());
+
+// Websocket stuff, could be moved:
+import { Server as WebSocketServer } from "ws";
+
+const socketServer = new WebSocketServer({ server: server });
+
+socketServer.on("connection", (socket) => {
+    logger.debug("WebSocket connection received");
+
+    socket.on("error", (error) => {
+        logger.debug(`WebSocket error occurred: ${error}`);
+    });
+
+    socket.on("message", (message) => {
+        logger.debug(`WebSocket message received: ${message}`);
+    });
+
+    socket.send("HI from server");
+});
