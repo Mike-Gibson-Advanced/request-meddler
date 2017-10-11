@@ -34,10 +34,34 @@ var config = {
                 },
             },
             {
+                test: /\.scss$/,
+                use: [
+                    {
+                        loader: "style-loader", // inject CSS to page
+                    },
+                    {
+                        loader: "css-loader", // translates CSS into CommonJS modules
+                    },
+                    {
+                        loader: "postcss-loader", // Run post css actions
+                        options: {
+                            plugins: () => [require("precss"), require("autoprefixer")],
+                        },
+                    },
+                    {
+                        loader: "sass-loader" // compiles SASS to CSS
+                    },
+                ],
+            },
+            {
                 test: /\.html$/,
                 loader: "raw-loader",
-                exclude: ["./src/index.html"]
+                exclude: ["./src/ui/app/index.html"],
             },
+            {
+                test: /\.(jpg|png|gif|eot|svg|ttf|woff|woff2)$/,
+                loader: "file-loader",
+            }
         ],
     },
     plugins: [
@@ -51,7 +75,7 @@ var config = {
             inject: true,
             template: helpers.root("/src/ui/app/index.html"),
             // favicon: helpers.root("/src/favicon.ico")
-        })
+        }),
     ],
 };
 
