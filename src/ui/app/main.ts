@@ -1,16 +1,18 @@
 import Vue from "vue";
+import Vuex from "vuex";
+import { createStore } from "./store";
+
+import { RequestListComponent } from "./components/requestList";
 
 import "./sass/main.scss";
 
+Vue.use(Vuex);
+
 new Vue({
+    store: createStore(),
     el: "#app-main",
     components: {
-        test: {
-            template: `
-            <div class="alert alert-primary" role="alert">
-                Wow
-            </div>`,
-        },
+        "request-list": RequestListComponent,
     },
 });
 

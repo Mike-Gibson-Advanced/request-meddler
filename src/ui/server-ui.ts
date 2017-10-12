@@ -11,7 +11,7 @@ import * as webpack from "webpack";
 // tslint:disable-next-line:no-var-requires
 const devConfig = require("../../config/webpack.config.dev");
 
-import { routes } from "./temp";
+import { routes } from "./requests";
 
 const router = new Router();
 router
@@ -42,9 +42,9 @@ const app = new Koa()
         },
     }));
     // .use(hotMiddleware(compile, {
-    //     // log: console.log,
-    //     // path: '/__webpack_hmr',
-    //     // heartbeat: 10 * 1000
+    //     log: console.log,
+    //     path: "/__webpack_hmr",
+    //     heartbeat: 1 * 1000,
     // }));
 
 export const server = http.createServer(app.callback());

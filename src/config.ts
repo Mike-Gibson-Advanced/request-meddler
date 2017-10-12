@@ -1,7 +1,7 @@
 import * as Winston from "winston";
 
 function getEnvironmentVariable(key: string, defaultValue: string): string {
-    const value: string = process.env[key];
+    const value = process.env[key] || null;
 
     if (!value) {
         const message = `Environment variable with key '${key}' not found. Using default: '${defaultValue}'.`;

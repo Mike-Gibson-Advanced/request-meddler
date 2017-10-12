@@ -9,7 +9,8 @@ const proxyRules = new HttpProxyRules({
     rules: {
         // '.*/api/': 'http://127.0.0.1:8888/api',
     },
-    default: "http://127.0.0.1:8889",
+    default: "http://www.hanselman.com/",
+    // default: "http://127.0.0.1:8889",
     // default: "http://localhost:7000/api/temp",
 });
 

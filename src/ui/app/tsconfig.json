@@ -11,8 +11,8 @@
         "target": "es5",
         "sourceMap": true,
         "typeRoots": [
-            "../../node_modules/@types/",
-            "../../typings/"
+            "../../../node_modules/@types/",
+            "../../../typings/"
         ],
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,

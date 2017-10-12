@@ -1,0 +1,10 @@
+<div>
+    <ul v-if="requests.length">
+        <li v-for="request in requests">
+            {{ request.id }} - {{ request.url }} - {{ request.request.time }}
+        </li>
+    </ul>
+    <p v-else class="alert alert-info">
+        No requests to display
+    </p>
+</div>
