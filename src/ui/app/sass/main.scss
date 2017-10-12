@@ -1,1 +1,10 @@
 @import "~bootstrap/scss/bootstrap";
+
+.list-item {
+    transition: all 0.5s;
+}
+
+.list-enter {
+    opacity: 0;
+    transform: translateY(-30px);
+}

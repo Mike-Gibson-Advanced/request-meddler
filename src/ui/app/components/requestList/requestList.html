@@ -1,9 +1,9 @@
 <div>
-    <ul v-if="requests.length">
-        <li v-for="request in requests">
+    <transition-group v-if="requests.length" tag="ul" name="list">
+        <li :key="request.id" v-for="request in requests" class="list-item">
             {{ request.id }} - {{ request.url }} - {{ request.request.time }}
         </li>
-    </ul>
+    </transition-group>
     <p v-else class="alert alert-info">
         No requests to display
     </p>
