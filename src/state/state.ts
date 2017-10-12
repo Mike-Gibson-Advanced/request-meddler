@@ -1,5 +1,6 @@
 import * as http from "http";
 import { IRule } from "../rules/config";
+import { emitter } from "./emitter";
 
 interface IState {
     hits: IHit[];
@@ -41,6 +42,8 @@ export function addHitRequest(request: http.ServerRequest): number {
 
     state.hits.push(hit);
     hitIdToHit.set(hit.id, hit);
+
+    emitter.emit("newRequest", hit);
 
     return hit.id;
 }

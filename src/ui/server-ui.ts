@@ -52,10 +52,22 @@ export const server = http.createServer(app.callback());
 // Websocket stuff, could be moved:
 import { Server as WebSocketServer } from "ws";
 
+import { emitter } from "../state";
+
 const socketServer = new WebSocketServer({ server: server });
 
 socketServer.on("connection", (socket) => {
     logger.debug("WebSocket connection received");
+
+    emitter.on("newRequest", (request) => {
+        if (socket.readyState !== socket.OPEN) {
+            // TODO: Properly implement unsubscribe
+            logger.error("Subscribed web socket client, not in OPEN state");
+            return;
+        }
+
+        socket.send(JSON.stringify({ type: "newRequest", payload: request }));
+    });
 
     socket.on("error", (error) => {
         logger.debug(`WebSocket error occurred: ${error}`);
@@ -64,6 +76,4 @@ socketServer.on("connection", (socket) => {
     socket.on("message", (message) => {
         logger.debug(`WebSocket message received: ${message}`);
     });
-
-    socket.send("HI from server");
 });
