@@ -59,14 +59,22 @@ const socketServer = new WebSocketServer({ server: server });
 socketServer.on("connection", (socket) => {
     logger.debug("WebSocket connection received");
 
-    emitter.on("newRequest", (request) => {
+    function checkCanSend() {
         if (socket.readyState !== socket.OPEN) {
             // TODO: Properly implement unsubscribe
             logger.error("Subscribed web socket client, not in OPEN state");
-            return;
+            return false;
         }
 
-        socket.send(JSON.stringify({ type: "newRequest", payload: request }));
+        return true;
+    }
+
+    emitter.on("newRequest", (request) => {
+        checkCanSend() && socket.send(JSON.stringify({ type: "newRequest", payload: request }));
+    });
+
+    emitter.on("newResponse", (response) => {
+        checkCanSend() && socket.send(JSON.stringify({ type: "newResponse", payload: response }));
     });
 
     socket.on("error", (error) => {

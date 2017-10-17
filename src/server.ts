@@ -19,10 +19,16 @@ listen(proxyServer, config.proxyPort, loggers.proxyLogger);
 import { config as rulesConfig } from "./rules";
 import { DelayAction, ForceOutOfOrderAction } from "./rules/actions";
 
+// rulesConfig.addRule({
+//     description: "All requests",
+//     urlPattern: /.*/,
+//     action: new DelayAction(2500),
+// });
+
 rulesConfig.addRule({
     description: "All API requests",
     urlPattern: /\/api/i,
-    action: new DelayAction(1),
+    action: new DelayAction(2500),
 });
 
 rulesConfig.addRule({

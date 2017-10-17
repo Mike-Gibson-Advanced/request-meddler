@@ -1,10 +1,33 @@
 <div>
-    <transition-group v-if="requests.length" tag="ul" name="list">
-        <li :key="request.id" v-for="request in requests" class="list-item">
-            {{ request.id }} - {{ request.url }} - {{ request.request.time }}
-        </li>
-    </transition-group>
-    <p v-else class="alert alert-info">
-        No requests to display
-    </p>
+    <div class="row">
+        <div class="col">
+            <h1>Requests</h1>
+
+            <transition-group v-if="requests.length" tag="div" name="list" class="list-group">
+                <a :key="request.id" v-for="request in requests" :class="{ active: request === selectedRequest }"
+                    class="list-group-item list-group-item-action clickable" @click="select(request)">
+
+                    <div class="d-flex justify-content-between">
+                        <strong class="mb-1">{{ request.url }}</strong>
+                        <small>{{ formatDate(request.request.time) }}</small>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <small>{{ request.appliedRules.length }} applied rule(s)</small>
+                        <div v-if="!request.response" class="progress" style="width: 100px;">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated bg-info"
+                                role="progressbar" style="width: 100%"></div>
+                        </div>
+                        <small v-if="request.response">{{ getDuration(request.request.time, request.response.time) }}</small>
+                    </div>
+                </a>
+            </transition-group>
+
+            <p v-else class="alert alert-info">
+                No requests to display
+            </p>
+        </div>
+        <div v-if="selectedRequest" class="col">
+            <request-details :request="selectedRequest"></request-details>
+        </div>
+    </div>
 </div>

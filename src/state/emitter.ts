@@ -1,9 +1,9 @@
 import { EventEmitter } from "events";
-import { IRequest } from "requests";
+import { IRequest, IResponseDetails } from "requests";
 
 interface IEventType {
     "newRequest": IRequest;
-    "newResponse": number;
+    "newResponse": IResponseDetails;
 }
 
 type eventType = keyof IEventType;

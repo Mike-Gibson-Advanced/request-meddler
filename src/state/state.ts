@@ -77,4 +77,10 @@ export function addHitResponse(hitId: number, responseBody: string): void {
         time: new Date(),
         body: responseBody,
     };
+
+    emitter.emit("newResponse", {
+        id: hitId,
+        response: hit.response,
+        appliedRules: hit.appliedRules, // TODO: Could emit another event
+    });
 }

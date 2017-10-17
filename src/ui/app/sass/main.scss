@@ -1,10 +1,14 @@
 @import "~bootstrap/scss/bootstrap";
 
-.list-item {
-    transition: all 0.5s;
+.list-group-item {
+    transition: transform 0.5s, opacity 0.5s;
 }
 
 .list-enter {
     opacity: 0;
     transform: translateY(-30px);
+}
+
+.clickable {
+    cursor: pointer;
 }

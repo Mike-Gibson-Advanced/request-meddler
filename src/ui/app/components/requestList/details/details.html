@@ -1,0 +1,52 @@
+<div>
+    <h1>Details</h1>
+
+    <div>
+        <div class="row">
+            <label class="col-sm-2">ID</label>
+            <span class="col">{{ request.id }}</span>
+        </div>
+        <div class="row">
+            <label class="col-sm-2">URL</label>
+            <span class="col">{{ request.url }}</span>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <h4>Request</h4>
+            <div class="row">
+                <label class="col-sm-2">Time</label>
+                <span class="col">{{ request.request.time }}</span>
+            </div>
+            <div class="row">
+                <label class="col-sm-2">Body</label>
+                <span class="col" style="text-overflow: ellipsis; white-space: nowrap; max-width: 100px; overflow-x:hidden;">
+                    {{ request.request.body }}
+                </span>
+            </div>
+        </div>
+        <div class="col">
+            <h4>Response</h4>
+            <div v-if="request.response">
+                <div class="row">
+                    <label class="col-sm-2">Time</label>
+                    <span class="col">{{ request.response.time }}</span>
+                </div>
+                <div class="row">
+                    <label class="col-sm-2">Body</label>
+                    <span class="col" style="text-overflow: ellipsis; white-space: nowrap; max-width: 100px; overflow-x:hidden;">
+                        {{ request.response.body }}
+                    </span>
+                </div>
+            </div>
+            <div v-if="!request.response" class="d-flex flex-column align-items-center">
+                <span class="mb-2">Waiting for response to be sent...</span>
+                <div class="progress" style="width: 100px;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-info"
+                        role="progressbar" style="width: 100%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

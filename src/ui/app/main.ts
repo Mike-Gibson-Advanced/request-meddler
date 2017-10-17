@@ -1,8 +1,9 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import { createRouter } from "./router";
 import { getStore } from "./store";
 
-import { RequestListComponent } from "./components/requestList";
+import { NavbarComponent } from "./components/navbar";
 
 import "./sass/main.scss";
 
@@ -10,9 +11,10 @@ Vue.use(Vuex);
 
 new Vue({
     store: getStore(),
+    router: createRouter(),
     el: "#app-main",
     components: {
-        "request-list": RequestListComponent,
+        navbar: NavbarComponent,
     },
 });
 
@@ -49,6 +51,9 @@ socket.onmessage = (event) => {
         switch (data.type) {
             case "newRequest":
                 store.commit("addRequest", data.payload);
+                break;
+            case "newResponse":
+                store.commit("addResponse", data.payload);
                 break;
             default:
                 console.warn(getWebSocketLogMessage(`Unrecognised type: ${data.type}`));
