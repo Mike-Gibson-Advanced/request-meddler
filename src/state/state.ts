@@ -1,4 +1,5 @@
 import * as http from "http";
+import { IRequest } from "requests";
 import { IRule } from "../rules/config";
 import { emitter } from "./emitter";
 
@@ -12,9 +13,15 @@ interface IHit {
     request: {
         time: Date;
         body: string;
+        headers: {
+            contentType: string | null,
+        };
     };
     response?: {
         time: Date;
+        headers: {
+            contentType: string | null,
+        };
         body: string;
     };
     appliedRules: IRule[];
@@ -35,6 +42,9 @@ export function addHitRequest(request: http.ServerRequest): number {
         url: request.url || "",
         request: {
             time: new Date(),
+            headers: {
+                contentType: getContentTypeHeader(request.headers),
+            },
             body: "todo", // request.
         },
         appliedRules: [],
@@ -43,7 +53,7 @@ export function addHitRequest(request: http.ServerRequest): number {
     state.hits.push(hit);
     hitIdToHit.set(hit.id, hit);
 
-    emitter.emit("newRequest", hit);
+    emitter.emit("newRequest", mapToRequest(hit));
 
     return hit.id;
 }
@@ -62,7 +72,7 @@ export function linkRulesTohit(hitId: number, rules: IRule[]): void {
     hit.appliedRules = rules;
 }
 
-export function addHitResponse(hitId: number, responseBody: string): void {
+export function addHitResponse(hitId: number, responseBody: string, response: http.ServerResponse): void {
     const hit = hitIdToHit.get(hitId);
 
     if (!hit) {
@@ -75,12 +85,36 @@ export function addHitResponse(hitId: number, responseBody: string): void {
 
     hit.response = {
         time: new Date(),
+        headers: {
+            contentType: getContentTypeHeader(response.getHeaders()),
+        },
         body: responseBody,
     };
 
     emitter.emit("newResponse", {
         id: hitId,
         response: hit.response,
-        appliedRules: hit.appliedRules, // TODO: Could emit another event
+        appliedRules: hit.appliedRules.map((rule) => rule.id), // TODO: Could emit another event
     });
+}
+
+const mapToRequest = (hit: IHit): IRequest => ({
+    id: hit.id,
+    url: hit.url,
+    request: hit.request,
+    response: hit.response,
+    appliedRules: hit.appliedRules.map((rule) => rule.id),
+});
+
+function getContentTypeHeader(headers: { [key: string]: number | string | string[] | undefined }): string | null {
+    const value = headers["content-type"];
+    if (!value) {
+        return null;
+    }
+
+    if (value instanceof Array) {
+        return value.join(", ");
+    }
+
+    return value.toString();
 }

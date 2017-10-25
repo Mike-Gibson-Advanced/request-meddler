@@ -50,5 +50,11 @@ export class RequestListComponent extends Vue {
         } catch (error) {
             alert("Error loading requests");
         }
+
+        try {
+            await this.$store.dispatch("loadRules");
+        } catch (error) {
+            alert("Error loading rules");
+        }
     }
 }

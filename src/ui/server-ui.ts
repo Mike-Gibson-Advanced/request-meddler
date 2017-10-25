@@ -11,12 +11,15 @@ import * as webpack from "webpack";
 // tslint:disable-next-line:no-var-requires
 const devConfig = require("../../config/webpack.config.dev");
 
-import { routes } from "./requests";
+import { routes as requests } from "./requests";
+import { routes as rules } from "./rules";
 
 const router = new Router();
 router
-    .use(routes.routes())
-    .use(routes.allowedMethods());
+    .use(requests.routes())
+    .use(requests.allowedMethods())
+    .use(rules.routes())
+    .use(rules.allowedMethods());
 
 const compile = webpack(devConfig);
 

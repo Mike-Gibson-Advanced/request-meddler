@@ -1,4 +1,5 @@
 import { IRequest, IResponseDetails } from "requests";
+import { IRule } from "rules";
 import Vue from "vue";
 import { State } from "./state";
 
@@ -18,5 +19,8 @@ export const mutations = {
 
         Vue.set(shift, "response", response.response);
         Vue.set(shift, "appliedRules", response.appliedRules);
+    },
+    setRules: (state: State, rules: IRule[]) => {
+        state.rules = rules;
     },
 };

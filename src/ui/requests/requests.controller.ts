@@ -10,7 +10,7 @@ routes.get("/api/requests", (ctx) => {
     ctx.body = state.hits
         .map((hit) => (<IRequest>{
             ...hit,
-            appliedRules: hit.appliedRules.map((rule) => ({ id: rule.id})),
+            appliedRules: hit.appliedRules.map((rule) => rule.id),
         }))
         .reverse();
 });

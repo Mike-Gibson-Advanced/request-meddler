@@ -9,8 +9,8 @@ const proxyRules = new HttpProxyRules({
     rules: {
         // '.*/api/': 'http://127.0.0.1:8888/api',
     },
-    // default: "http://www.hanselman.com/",
-    default: "http://127.0.0.1:8889",
+    default: "http://www.hanselman.com/",
+    // default: "http://127.0.0.1:8889",
     // default: "http://localhost:7000/api/temp",
 });
 
@@ -30,7 +30,7 @@ const proxy = httpProxy.createProxy();
 // });
 
 // tslint:disable-next-line:variable-name
-proxy.on("proxyRes", function(proxyRes, req, _res) {
+proxy.on("proxyRes", function(proxyRes, req, res) {
     // collect response data
     let proxyResData = "";
     proxyRes.on("data", function(chunk) {
@@ -38,7 +38,7 @@ proxy.on("proxyRes", function(proxyRes, req, _res) {
     });
     proxyRes.on("end", () => {
         const hitId: number = (<any>req)._hitId;
-        addHitResponse(hitId, proxyResData);
+        addHitResponse(hitId, proxyResData, res);
 
         // logger.info(JSON.stringify(getState()));
     });

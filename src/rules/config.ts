@@ -11,6 +11,10 @@ class Config {
     private nextRuleId: number = 1;
     private rules: IRule[] = [];
 
+    getAllRules(): IRule[] {
+        return this.rules;
+    }
+
     findRules(url: string): IRule[] {
         return this.rules.filter((rule) => rule.urlPattern.test(url));
     }

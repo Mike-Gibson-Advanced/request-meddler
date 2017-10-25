@@ -8,4 +8,9 @@ export const actions = {
         const requests = result.data;
         store.commit("setRequests", requests);
     },
+    loadRules: async (store: ActionContext<State, State>) => {
+        const result = await axios.get("api/rules");
+        const rules = result.data;
+        store.commit("setRules", rules);
+    },
 };
