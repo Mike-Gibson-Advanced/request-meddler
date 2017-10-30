@@ -2,6 +2,7 @@ import Vue from "vue";
 import VueRouter, { Location } from "vue-router";
 
 import { RequestListComponent } from "./components/requestList";
+import { RequestsByRuleComponent } from "./components/requestsByRule";
 
 Vue.use(VueRouter);
 
@@ -16,6 +17,11 @@ export function createRouter() {
                 name: "requests",
                 path: "/requests",
                 component: RequestListComponent,
+            },
+            {
+                name: "requestsByRule",
+                path: "/requestsByRule",
+                component: RequestsByRuleComponent,
             },
             {
                 path: "/settings",
@@ -40,6 +46,12 @@ export function createRouter() {
 export function getRequestsRouteLocation(): Location {
     return {
         name: "requests",
+    };
+}
+
+export function getRequestsByRuleRouteLocation(): Location {
+    return {
+        name: "requestsByRule",
     };
 }
 

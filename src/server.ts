@@ -22,7 +22,7 @@ import { DelayAction, ForceOutOfOrderAction } from "./rules/actions";
 rulesConfig.addRule({
     description: "All requests",
     urlPattern: /.*/,
-    action: new DelayAction(2500),
+    action: new DelayAction(5500),
 });
 
 // rulesConfig.addRule({

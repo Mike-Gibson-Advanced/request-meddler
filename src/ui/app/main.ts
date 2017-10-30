@@ -55,6 +55,9 @@ socket.onmessage = (event) => {
             case "newResponse":
                 store.commit("addResponse", data.payload);
                 break;
+            case "appliedRulesChanged":
+                store.commit("setAppliedRules", data.payload);
+                break;
             default:
                 console.warn(getWebSocketLogMessage(`Unrecognised type: ${data.type}`));
                 break;

@@ -70,6 +70,11 @@ export function linkRulesTohit(hitId: number, rules: IRule[]): void {
     }
 
     hit.appliedRules = rules;
+
+    emitter.emit("appliedRulesChanged", {
+        id: hitId,
+        appliedRules: hit.appliedRules.map((rule) => rule.id),
+    });
 }
 
 export function addHitResponse(hitId: number, responseBody: string, response: http.ServerResponse): void {
@@ -94,7 +99,7 @@ export function addHitResponse(hitId: number, responseBody: string, response: ht
     emitter.emit("newResponse", {
         id: hitId,
         response: hit.response,
-        appliedRules: hit.appliedRules.map((rule) => rule.id), // TODO: Could emit another event
+        appliedRules: hit.appliedRules.map((rule) => rule.id),
     });
 }
 

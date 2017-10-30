@@ -3,7 +3,7 @@
 
     <div>
         <div class="row">
-            <label class="col-sm-2">ID</label>
+            <label class="col-sm-2">Request ID</label>
             <span class="col">{{ request.id }}</span>
         </div>
         <div class="row">
@@ -150,7 +150,7 @@
         </p>
         <ol v-else>
             <li v-for="rule in appliedRules">
-                <strong>{{ rule.description }}</strong> (matches url pattern {{ rule.urlPattern }})
+                <strong>{{ rule.description }}</strong> (matches URL pattern {{ rule.urlPattern }})
                 <br />
                 <strong>Action:</strong> {{ rule.actionDescription }}
             </li>

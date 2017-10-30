@@ -10,6 +10,10 @@ export class NavbarComponent extends Vue {
         return router.getRequestsRouteLocation();
     }
 
+    get requestsByRuleRouteLocation() {
+        return router.getRequestsByRuleRouteLocation();
+    }
+
     get settingsRouteLocation() {
         return router.getSettingsRouteLocation();
     }

@@ -1,9 +1,10 @@
 import { EventEmitter } from "events";
-import { IRequest, IResponseDetails } from "requests";
+import { IAppliedRulesChanged, IRequest, IResponseDetails } from "requests";
 
 interface IEventType {
     "newRequest": IRequest;
     "newResponse": IResponseDetails;
+    "appliedRulesChanged": IAppliedRulesChanged;
 }
 
 type eventType = keyof IEventType;

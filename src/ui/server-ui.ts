@@ -80,6 +80,10 @@ socketServer.on("connection", (socket) => {
         checkCanSend() && socket.send(JSON.stringify({ type: "newResponse", payload: response }));
     });
 
+    emitter.on("appliedRulesChanged", (response) => {
+        checkCanSend() && socket.send(JSON.stringify({ type: "appliedRulesChanged", payload: response }));
+    });
+
     socket.on("error", (error) => {
         logger.debug(`WebSocket error occurred: ${error}`);
     });

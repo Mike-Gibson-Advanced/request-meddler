@@ -1,0 +1,25 @@
+<div>
+    <div class="row">
+        <div class="col" style="flex: 2">
+            <h1>Requests by rule</h1>
+
+            <transition-group v-if="rules.length" tag="div" name="list" class="list-group">
+                <a :key="rule.id" v-for="rule in rules" :class="{ active: rule === selectedRule }"
+                    class="list-group-item list-group-item-action clickable" @click="select(rule)">
+
+                    <div class="d-flex justify-content-between">
+                        <strong class="mb-1">{{ rule.description }}</strong>
+                        <span>{{ rule.requests.length }}</span>
+                    </div>
+                </a>
+            </transition-group>
+
+            <p v-else class="alert alert-info">
+                No rules to display
+            </p>
+        </div>
+        <div v-if="selectedRule" class="col" style="flex: 3">
+            <rule-details :rule="selectedRule"></rule-details>
+        </div>
+    </div>
+</div>
