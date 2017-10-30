@@ -22,7 +22,11 @@ import { DelayAction, ForceOutOfOrderAction } from "./rules/actions";
 rulesConfig.addRule({
     description: "All requests",
     urlPattern: /.*/,
-    action: new DelayAction(5500),
+    actions: [
+        new DelayAction(1500),
+        new DelayAction(1000),
+        new DelayAction(500),
+    ],
 });
 
 // rulesConfig.addRule({
@@ -34,11 +38,14 @@ rulesConfig.addRule({
 rulesConfig.addRule({
     description: "Care needs list",
     urlPattern: /\/api\/serviceusers\/fake_user\/careneeds/i,
-    action: new DelayAction(1),
+    actions: [
+        new DelayAction(1),
+        new ForceOutOfOrderAction(4000),
+    ],
 });
 
-rulesConfig.addRule({
-    description: "Care needs list",
-    urlPattern: /\/api\/serviceusers\/fake_user\/careneeds/i,
-    action: new ForceOutOfOrderAction(4000),
-});
+// rulesConfig.addRule({
+//     description: "Care needs list",
+//     urlPattern: /\/api\/serviceusers\/fake_user\/careneeds/i,
+//     action: new ForceOutOfOrderAction(4000),
+// });

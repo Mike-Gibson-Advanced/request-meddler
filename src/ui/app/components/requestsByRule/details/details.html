@@ -15,8 +15,15 @@
             <span class="col">{{ rule.urlPattern }}</span>
         </div>
         <div class="row">
-            <label class="col-sm-2">Action</label>
-            <span class="col">{{ rule.actionDescription }}</span>
+            <label class="col-sm-2">Actions</label>
+            <div class="col">
+                <ol v-if="rule.actions.length" style="list-style-position: inside; padding-left: 0;">
+                    <li v-for="action in rule.actions">
+                        {{ action.description }}
+                    </li>
+                </ol>
+                <p v-if="!rule.actions.length">No actions are configured</p>
+            </div>
         </div>
     </div>
 

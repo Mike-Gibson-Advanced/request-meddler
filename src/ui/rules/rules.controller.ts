@@ -11,7 +11,7 @@ routes.get("/api/rules", (ctx) => {
             id: rule.id,
             urlPattern: rule.urlPattern.toString(),
             description: rule.description,
-            actionDescription: rule.action.description,
+            actions: rule.actions.map((action) => ({ description: action.description })),
         }));
     ctx.body = rules;
 });

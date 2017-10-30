@@ -4,7 +4,7 @@ export interface IRule {
     id: number;
     description: string;
     urlPattern: RegExp;
-    action: IAction; // TODO: Array of actions?
+    actions: IAction[];
 }
 
 class Config {
@@ -19,7 +19,7 @@ class Config {
         return this.rules.filter((rule) => rule.urlPattern.test(url));
     }
 
-    addRule(rule: { description: string, urlPattern: RegExp, action: IAction }) {
+    addRule(rule: { description: string, urlPattern: RegExp, actions: IAction[] }) {
         this.rules.push({
             id: this.nextRuleId++,
             ...rule,

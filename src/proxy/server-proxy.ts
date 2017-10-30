@@ -79,11 +79,29 @@ export const server = http.createServer((req, res) => {
 
         const startChain = rules.reverse().reduce((accumulator, current) => {
             return () => {
-                const processingContext = {
-                    log: (message: string) => logger.debug(getLogMessage(`[Rule '${current.description}'] ${message}`)),
-                };
-                processingContext.log(`Running action '${current.action.description}'`);
-                current.action.process(accumulator, processingContext);
+                const ruleLog = (message: string) =>
+                    logger.debug(getLogMessage(`[Rule '${current.description}'] ${message}`));
+
+                if (!current.actions.length) {
+                    ruleLog("No actions defined");
+                    accumulator();
+                } else {
+                    const startAction = [...current.actions].reverse().reduce((actionAccumulator, currentAction) => {
+                        return () => {
+                            const actionLog = (message: string) => logger
+                                .debug(getLogMessage(`[Rule '${current.description}'] ` +
+                                    `[Action '${currentAction.description}'] ${message}`));
+                            const processingContext = {
+                                log: actionLog,
+                            };
+
+                            ruleLog(`Running action '${currentAction.description}'`);
+                            currentAction.process(actionAccumulator, processingContext);
+                        };
+                    }, accumulator);
+
+                    startAction();
+                }
             };
         }, next);
 

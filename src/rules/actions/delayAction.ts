@@ -1,4 +1,4 @@
-import { IAction } from "./action";
+import { IAction, IActionProcessingContext } from "./action";
 
 export class DelayAction implements IAction {
     private delayInMilliseconds: number;
@@ -11,9 +11,10 @@ export class DelayAction implements IAction {
         this.delayInMilliseconds = delayInMilliseconds;
     }
 
-    process(proxyRequest: () => void): void {
+    process(next: () => void, context: IActionProcessingContext): void {
         setTimeout(() => {
-            proxyRequest();
+            context.log("Calling next");
+            next();
         }, this.delayInMilliseconds);
     }
 }

@@ -12,60 +12,6 @@
         </div>
     </div>
 
-    <!-- <div class="row">
-        <div class="col">
-            <h4>Request</h4>
-            <div class="row">
-                <label class="col-sm-2">Time</label>
-                <span class="col">{{ request.request.time }}</span>
-            </div>
-            <div class="row">
-                <label class="col-sm-2">Body</label>
-                <span class="col" style="text-overflow: ellipsis; white-space: nowrap; max-width: 100px; overflow-x:hidden;">
-                    {{ request.request.body }}
-                </span>
-            </div>
-        </div>
-        <div class="col">
-            <h4>Response</h4>
-            <div v-if="request.response">
-                <div class="row">
-                    <label class="col-sm-2">Time</label>
-                    <span class="col">{{ request.response.time }}</span>
-                </div>
-                <div class="row">
-                    <label class="col-sm-2">Body</label>
-                    <span class="col" style="text-overflow: ellipsis; white-space: nowrap; max-width: 100px; overflow-x:hidden;">
-                        {{ request.response.body }}
-                    </span>
-                </div>
-            </div>
-            <div v-if="!request.response" class="d-flex flex-column align-items-center">
-                <span class="mb-2">Waiting for response to be sent...</span>
-                <div class="progress" style="width: 100px;">
-                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-info"
-                        role="progressbar" style="width: 100%"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <h4>Applied Rules</h4>
-
-    <p v-if="!appliedRules">
-        No rules have been applied yet
-    </p>
-    <p v-else-if="!appliedRules.length">
-        No rules were applied
-    </p>
-    <ol v-else>
-        <li v-for="rule in appliedRules">
-            <strong>{{ rule.description }}</strong> (matches url pattern {{ rule.urlPattern }})
-            <br />
-            <strong>Action:</strong> {{ rule.actionDescription }}
-        </li>
-    </ol> -->
-
     <ul class="nav nav-tabs mt-4 mb-4">
         <li class="nav-item">
             <a class="nav-link clickable" :class="{ active: currentTab === 'request' }" @click="selectTab('request')">
@@ -152,7 +98,13 @@
             <li v-for="rule in appliedRules">
                 <strong>{{ rule.description }}</strong> (matches URL pattern {{ rule.urlPattern }})
                 <br />
-                <strong>Action:</strong> {{ rule.actionDescription }}
+                <strong>Actions:</strong>
+                <ol v-if="rule.actions.length">
+                    <li v-for="action in rule.actions">
+                        {{ action.description }}
+                    </li>
+                </ol>
+                <p v-if="!rule.actions.length">No actions are configured</p>
             </li>
         </ol>
     </div>

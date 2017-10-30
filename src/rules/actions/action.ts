@@ -1,6 +1,6 @@
 export interface IAction {
     readonly description: string;
-    process(proxyRequest: () => void, context: IActionProcessingContext): void;
+    process(next: () => void, context: IActionProcessingContext): void;
 }
 
 export interface IActionProcessingContext {

@@ -18,10 +18,10 @@ export class ForceOutOfOrderAction implements IAction {
         this.timeoutId = null;
     }
 
-    process(proxyRequest: () => void, context: IActionProcessingContext): void {
+    process(next: () => void, context: IActionProcessingContext): void {
         if (this.previousRequest) {
             context.log("Already have a previous request, completing this one and then the other");
-            proxyRequest();
+            next();
             clearTimeout(this.previousRequest.timeout);
             this.previousRequest.complete();
             this.previousRequest = null;
@@ -34,10 +34,10 @@ export class ForceOutOfOrderAction implements IAction {
             timeout: setTimeout(() => {
                 context.log(
                     `No subsequent request received within ${this.timeoutInMilliseconds}ms, completing request`),
-                proxyRequest();
+                    next();
                 this.previousRequest = null;
             }, this.timeoutInMilliseconds),
-            complete: proxyRequest,
+            complete: next,
         };
     }
 }
