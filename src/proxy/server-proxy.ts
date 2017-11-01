@@ -7,20 +7,6 @@ import { config } from "./config";
 
 const proxy = httpProxy.createProxy();
 
-// proxy.on("proxyReq", function(proxyReq, req, res, options) {
-//     // var target = proxyRules.match(req);
-//     // //console.log("HOST: ", options);
-
-//     // if (options.target.host === "127.0.0.1:8889") {
-//     //     console.log("localhost, NOT overriding session ID");
-//     //     return;
-//     // }
-
-//     // if (sessionIdOverride)
-//     //     proxyReq.setHeader("X-Session-Id", sessionIdOverride);
-// });
-
-// tslint:disable-next-line:variable-name
 proxy.on("proxyRes", function(proxyRes, req, res) {
     // collect response data
     let proxyResData = "";
@@ -30,8 +16,6 @@ proxy.on("proxyRes", function(proxyRes, req, res) {
     proxyRes.on("end", () => {
         const hitId: number = (<any>req)._hitId;
         addHitResponse(hitId, proxyResData, res);
-
-        // logger.info(JSON.stringify(getState()));
     });
 });
 
@@ -109,7 +93,8 @@ export const server = http.createServer((req, res) => {
 });
 
 function writeError(res: http.ServerResponse, code: number, message: string) {
-    res.writeHead(code, { "content-type": "application/json" });
+    res.setHeader("content-type", "application/json");
+    res.writeHead(code);
     res.end(JSON.stringify({
         error: true,
         message: message,
