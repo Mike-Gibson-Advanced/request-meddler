@@ -1,18 +1,9 @@
 import * as http from "http";
 import * as httpProxy from "http-proxy";
-import * as HttpProxyRules from "http-proxy-rules";
 import { proxyLogger as logger } from "../logger";
 import { config as rulesConfig } from "../rules";
 import { addHitRequest, addHitResponse, linkRulesTohit /*, getState */ } from "../state";
-
-const proxyRules = new HttpProxyRules({
-    rules: {
-        // '.*/api/': 'http://127.0.0.1:8888/api',
-    },
-    default: "http://www.hanselman.com/",
-    // default: "http://127.0.0.1:8889",
-    // default: "http://localhost:7000/api/temp",
-});
+import { config } from "./config";
 
 const proxy = httpProxy.createProxy();
 
@@ -47,7 +38,7 @@ proxy.on("proxyRes", function(proxyRes, req, res) {
 export const server = http.createServer((req, res) => {
     logger.debug(`matching '${req.url}' ...`);
 
-    const target = proxyRules.match(req);
+    const target = config.getProxyRules().match(req);
     if (target) {
         logger.debug(`Matched. Proxying to '${target}'.`);
 
@@ -73,8 +64,13 @@ export const server = http.createServer((req, res) => {
             }, (e) => {
                 const error = `Error proxying request to ${target}: ${e.message}`;
                 logger.error(getLogMessage(error));
-                writeError(res, error);
+                writeError(res, 500, error);
             });
+        };
+
+        const returnError = (details: { code: number, message: any }) => {
+            writeError(res, details.code, details.message);
+            addHitResponse(id, "Errored", res);
         };
 
         const startChain = rules.reverse().reduce((accumulator, current) => {
@@ -96,7 +92,7 @@ export const server = http.createServer((req, res) => {
                             };
 
                             ruleLog(`Running action '${currentAction.description}'`);
-                            currentAction.process(actionAccumulator, processingContext);
+                            currentAction.process(actionAccumulator, processingContext, returnError);
                         };
                     }, accumulator);
 
@@ -109,11 +105,11 @@ export const server = http.createServer((req, res) => {
         return;
     }
 
-    writeError(res, "The request url and path did not match any of the listed rules");
+    writeError(res, 500, "The request url and path did not match any of the listed rules");
 });
 
-function writeError(res: http.ServerResponse, message: string) {
-    res.writeHead(500, { "content-type": "application/json" });
+function writeError(res: http.ServerResponse, code: number, message: string) {
+    res.writeHead(code, { "content-type": "application/json" });
     res.end(JSON.stringify({
         error: true,
         message: message,

@@ -5,6 +5,7 @@ declare module "http-proxy-rules" {
     class HttpProxyRules {
         constructor(args: any);
         match(req: any): string | undefined | null;
+        default: string;
     }
 
     export = HttpProxyRules;

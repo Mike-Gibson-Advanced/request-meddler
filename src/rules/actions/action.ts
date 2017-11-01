@@ -1,6 +1,9 @@
 export interface IAction {
     readonly description: string;
-    process(next: () => void, context: IActionProcessingContext): void;
+    process(
+        next: () => void,
+        context: IActionProcessingContext,
+        error: (details: { code: number, message: string }) => void): void;
 }
 
 export interface IActionProcessingContext {
