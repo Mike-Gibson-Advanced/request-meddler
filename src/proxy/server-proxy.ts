@@ -53,8 +53,9 @@ export const server = http.createServer((req, res) => {
         };
 
         const returnError = (details: { code: number, message: any }) => {
-            writeError(res, details.code, details.message);
-            addHitResponse(id, "Errored", res);
+            const response = { error: true, message: details.message };
+            writeError(res, details.code, response);
+            addHitResponse(id, JSON.stringify(response), res);
         };
 
         const startChain = rules.reverse().reduce((accumulator, current) => {
@@ -92,11 +93,8 @@ export const server = http.createServer((req, res) => {
     writeError(res, 500, "The request url and path did not match any of the listed rules");
 });
 
-function writeError(res: http.ServerResponse, code: number, message: string) {
+function writeError(res: http.ServerResponse, code: number, content: any) {
     res.setHeader("content-type", "application/json");
     res.writeHead(code);
-    res.end(JSON.stringify({
-        error: true,
-        message: message,
-    }));
+    res.end(JSON.stringify(typeof(content) === "string" ? { error: true, message: content } : content));
 }

@@ -79,7 +79,11 @@
                 </div>
                 <div class="row">
                     <div class="col" v-if="canDisplayBody(request.response.headers.contentType)">
-                        <pre>{{ request.response.body }}</pre>
+                        <table style="table-layout: fixed; width: 100%; word-wrap: break-word;">
+                            <tr><td>
+                                <pre style="white-space: pre-wrap;">{{ request.response.body }}</pre>
+                            </td></tr>
+                        </table>
                     </div>
                 </div>
             </div>

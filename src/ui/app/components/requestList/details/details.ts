@@ -35,7 +35,8 @@ export class RequestDetailsComponent extends Vue {
 
     canDisplayBody(contentType: string | null) {
         const normalised = (contentType || "").toLocaleLowerCase();
-        return ["application/json", "text", "text/html"].indexOf(normalised) > -1;
+        return ["application/json", "text", "text/html"].indexOf(normalised) > -1 ||
+            normalised.indexOf("application/json") === 0;
     }
 }
 
