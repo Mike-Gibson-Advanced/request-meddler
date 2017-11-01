@@ -62,6 +62,12 @@
                     <span class="col">{{ request.response.time }}</span>
                 </div>
                 <div class="row">
+                        <label class="col-sm-2">Status Code</label>
+                        <span class="col" :class="{ 'text-danger': request.response.statusCode >= 400 }">
+                            {{ request.response.statusCode }}
+                        </span>
+                    </div>
+                <div class="row">
                     <label class="col-sm-2">Content Type</label>
                     <span class="col">{{ request.response.headers.contentType }}</span>
                 </div>

@@ -19,6 +19,7 @@ interface IHit {
     };
     response?: {
         time: Date;
+        statusCode: number;
         headers: {
             contentType: string | null,
         };
@@ -90,6 +91,7 @@ export function addHitResponse(hitId: number, responseBody: string, response: ht
 
     hit.response = {
         time: new Date(),
+        statusCode: response.statusCode,
         headers: {
             contentType: getContentTypeHeader(response.getHeaders()),
         },

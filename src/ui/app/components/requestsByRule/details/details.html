@@ -46,6 +46,7 @@
                 <tr>
                     <th scope="col" style="border-top: 0">#</th>
                     <th scope="col" style="border-top: 0">URL</th>
+                    <th scope="col" style="border-top: 0">Status Code</th>
                     <th scope="col" style="border-top: 0">Request start</th>
                     <th scope="col" style="border-top: 0">Time until response</th>
                 </tr>
@@ -54,6 +55,9 @@
                 <tr v-for="request in rule.requests">
                     <th scope="row">{{ request.id }}</th>
                     <td>{{ request.url }}</td>
+                    <td :class="{ 'text-danger': request.response && request.response.statusCode >= 400 }">
+                        {{ request.response && request.response.statusCode || "-" }}
+                    </td>
                     <td>{{ formatDate(request.request.time) }}</td>
                     <td v-if="!request.response" style="text-align: center">
                         <div class="progress" style="width: 100px;">
