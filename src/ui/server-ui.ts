@@ -84,11 +84,29 @@ socketServer.on("connection", (socket) => {
         checkCanSend() && socket.send(JSON.stringify({ type: "appliedRulesChanged", payload: response }));
     });
 
+    emitter.on("askUser", (options) => {
+        checkCanSend() && socket.send(JSON.stringify({ type: "askUser", payload: options }));
+    });
+
+    emitter.on("cancelAskUser", (options) => {
+        checkCanSend() && socket.send(JSON.stringify({ type: "cancelAskUser", payload: options }));
+    });
+
     socket.on("error", (error) => {
         logger.debug(`WebSocket error occurred: ${error}`);
     });
 
-    socket.on("message", (message) => {
-        logger.debug(`WebSocket message received: ${message}`);
+    socket.on("message", (rawMessage) => {
+        logger.debug(`WebSocket message received: ${rawMessage}`);
+
+        const message = JSON.parse(rawMessage.toString()) as { type: string, payload: any };
+
+        switch (message.type) {
+            case "userResponse":
+                emitter.emit("userResponse", message.payload);
+                break;
+            default:
+                logger.error(`Unexpected message type: '${message.type}'`);
+        }
     });
 });

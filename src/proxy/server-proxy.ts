@@ -2,6 +2,7 @@ import * as http from "http";
 import * as httpProxy from "http-proxy";
 import { proxyLogger as logger } from "../logger";
 import { config as rulesConfig } from "../rules";
+import { emitter } from "../state";
 import { addHitRequest, addHitResponse, linkRulesTohit /*, getState */ } from "../state";
 import { config } from "./config";
 
@@ -74,6 +75,23 @@ export const server = http.createServer((req, res) => {
                                     `[Action '${currentAction.description}'] ${message}`));
                             const processingContext = {
                                 log: actionLog,
+                                confirmWithUser: (question: string) => {
+                                    return new Promise<boolean>((resolve) => {
+                                        // tslint:disable-next-line:no-console
+                                        console.log("asking...", { id: id, question: question });
+                                        emitter.emit("askUser", { id: id, question: question });
+                                        const listener = (response: { id: number, response: boolean }) => {
+                                            if (response.id === id) {
+                                                resolve(response.response);
+                                                emitter.removeListener("userResponse", listener);
+                                            }
+                                        };
+                                        emitter.on("userResponse", listener);
+                                    });
+                                },
+                                cancelConfirm: () => {
+                                    emitter.emit("cancelAskUser", { id: id });
+                                },
                             };
 
                             ruleLog(`Running action '${currentAction.description}'`);

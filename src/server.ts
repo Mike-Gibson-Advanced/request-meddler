@@ -18,30 +18,31 @@ listen(proxyServer, config.proxyPort, loggers.proxyLogger);
 // TEMP:
 import { config as proxyConfig } from "./proxy";
 import { config as rulesConfig } from "./rules";
-import { DelayAction, ForceErrorAction /*, ForceOutOfOrderAction */ } from "./rules/actions";
+import { DelayAction, ForceErrorAction, ManualErrorAction /*, ForceOutOfOrderAction */ } from "./rules/actions";
 
-// proxyConfig.setProxyAddress("http://www.hanselman.com/");
-proxyConfig.setProxyAddress("http://127.0.0.1:8889");
+proxyConfig.setProxyAddress("http://www.hanselman.com/");
+// proxyConfig.setProxyAddress("http://127.0.0.1:8889");
+
+rulesConfig.addRule({
+    description: "All requests",
+    urlPattern: /.*/,
+    actions: [
+        new DelayAction(1500),
+        // new DelayAction(1000),
+        // new DelayAction(500),
+        new ManualErrorAction(),
+        new ForceErrorAction(0.0),
+    ],
+});
 
 // rulesConfig.addRule({
-//     description: "All requests",
-//     urlPattern: /.*/,
+//     description: "All API requests",
+//     urlPattern: /\/api/i,
 //     actions: [
-//         new DelayAction(1500),
-//         // new DelayAction(1000),
-//         // new DelayAction(500),
+//         new DelayAction(1000),
 //         new ForceErrorAction(0.2),
 //     ],
 // });
-
-rulesConfig.addRule({
-    description: "All API requests",
-    urlPattern: /\/api/i,
-    actions: [
-        new DelayAction(1000),
-        new ForceErrorAction(0.2),
-    ],
-});
 
 // rulesConfig.addRule({
 //     description: "Care needs list",

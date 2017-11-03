@@ -32,4 +32,13 @@ export const mutations = {
     setRules: (state: State, rules: IRule[]) => {
         state.rules = rules;
     },
+    addQuestion: (state: State, question: { id: number, question: string, sendResult: (result: boolean) => void }) => {
+        state.questions.push(question);
+    },
+    removeQuestion: (state: State, questionId: number) => {
+        const index = state.questions.findIndex((question) => question.id === questionId);
+        if (index > -1) {
+            state.questions.splice(index, 1);
+        }
+    },
 };

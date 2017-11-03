@@ -13,4 +13,11 @@ export const actions = {
         const rules = result.data;
         store.commit("setRules", rules);
     },
+    respondToQuestion: (
+        store: ActionContext<State, State>,
+        payload: { questionId: number, result: boolean }) => {
+            const question = store.state.questions.find((q) => q.id === payload.questionId);
+            question!.sendResult(payload.result);
+            store.commit("removeQuestion", payload.questionId);
+        },
 };

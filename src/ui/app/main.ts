@@ -4,6 +4,7 @@ import { createRouter } from "./router";
 import { getStore } from "./store";
 
 import { NavbarComponent } from "./components/navbar";
+import { QuestionListComponent } from "./components/questionList";
 
 import "./sass/main.scss";
 
@@ -15,6 +16,12 @@ new Vue({
     el: "#app-main",
     components: {
         navbar: NavbarComponent,
+        questions: QuestionListComponent,
+    },
+    computed: {
+        questions() {
+            return this.$store.state.questions;
+        },
     },
 });
 
@@ -58,9 +65,24 @@ socket.onmessage = (event) => {
             case "appliedRulesChanged":
                 store.commit("setAppliedRules", data.payload);
                 break;
+            case "askUser":
+                store.commit("addQuestion", {
+                    ...data.payload,
+                    sendResult: (result: boolean) => {
+                        trySendMessage("userResponse", { id: data.payload.id, response: result });
+                    },
+                });
+                break;
+            case "cancelAskUser":
+                store.commit("removeQuestion", data.payload.id);
+                break;
             default:
                 console.warn(getWebSocketLogMessage(`Unrecognised type: ${data.type}`));
                 break;
         }
     }
 };
+
+function trySendMessage(type: string, payload: {}) {
+    socket.send(JSON.stringify({ type: type, payload: payload }));
+}

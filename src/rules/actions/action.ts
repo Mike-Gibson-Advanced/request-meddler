@@ -8,4 +8,6 @@ export interface IAction {
 
 export interface IActionProcessingContext {
     log(message: string): void;
+    confirmWithUser(question: string): Promise<boolean>;
+    cancelConfirm(): void;
 }
