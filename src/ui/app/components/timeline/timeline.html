@@ -1,6 +1,37 @@
 <div>
     <h1>Timeline</h1>
-    <p>Displaying requests in the last {{ thresholdInSeconds }} seconds</p>
+
+    <div class="card mb-3">
+        <div class="card-header clickable" role="tab" @click="showFilter = !showFilter">
+            <strong>Filter:</strong> {{ filterText }}
+        </div>
+
+        <div class="card-body" v-if="showFilter">
+            <div class="form-group">
+                <label>URL Regular Expression</label>
+                <div class="input-group" :class="{ 'is-invalid': regexError }">
+                    <input type="text" style="max-width: 500px" class="form-control" :value="regex"
+                        @input="regexChanged($event.target.value)" @keyup.enter="showFilter = false">
+                    <!-- <div class="input-group-btn">
+                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
+                            Select from rule
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <a class="dropdown-item" href="#">Action</a>
+                            <a class="dropdown-item" href="#">Another action</a>
+                            <a class="dropdown-item" href="#">Something else here</a>
+                            <div role="separator" class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#">Separated link</a>
+                        </div>
+                    </div> -->
+                </div>
+                <div class="invalid-feedback" v-if="regexError">
+                    Invalid regular expression
+                </div>
+            </div>
+        </div>
+    </div>
+
     <transition name="switch-animation" mode="out-in">
         <div v-if="visibleRequests.length" key="timeline">
             <table class="table table-sm">
