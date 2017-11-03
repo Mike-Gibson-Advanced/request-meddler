@@ -36,6 +36,9 @@ rulesConfig.addRule({
     ],
 });
 
+        // new DelayAction(1000),
+        // new DelayAction(500),
+
 // rulesConfig.addRule({
 //     description: "All API requests",
 //     urlPattern: /\/api/i,
@@ -44,7 +47,6 @@ rulesConfig.addRule({
 //         new ForceErrorAction(0.2),
 //     ],
 // });
-
 // rulesConfig.addRule({
 //     description: "Care needs list",
 //     urlPattern: /\/api\/serviceusers\/fake_user\/careneeds/i,

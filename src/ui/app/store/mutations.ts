@@ -9,6 +9,7 @@ export const mutations = {
         state.requests = requests;
     },
     addRequest: (state: State, request: IRequest) => {
+        request.request.time = new Date(request.request.time);
         state.requests.unshift(request);
     },
     addResponse: (state: State, response: IResponseDetails) => {
@@ -18,6 +19,7 @@ export const mutations = {
             return;
         }
 
+        response.response.time = new Date(response.response.time);
         Vue.set(request, "response", response.response);
         Vue.set(request, "appliedRules", response.appliedRules);
     },

@@ -14,7 +14,7 @@ export class NavbarComponent extends Vue {
         return router.getRequestsByRuleRouteLocation();
     }
 
-    get settingsRouteLocation() {
-        return router.getSettingsRouteLocation();
+    get timelineRouteLocation() {
+        return router.getTimelineRouteLocation();
     }
 }

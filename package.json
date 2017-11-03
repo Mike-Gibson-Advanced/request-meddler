@@ -6,6 +6,7 @@
   "license": "ISC",
   "devDependencies": {
     "@types/axios": "^0.14.0",
+    "@types/d3": "^4.11.0",
     "@types/date-fns": "^2.6.0",
     "@types/http-proxy": "^1.12.1",
     "@types/koa": "^2.0.39",
@@ -39,6 +40,7 @@
   "dependencies": {
     "axios": "^0.16.2",
     "bootstrap": "^4.0.0-beta",
+    "d3": "^4.11.0",
     "date-fns": "^1.29.0",
     "http-proxy": "^1.16.2",
     "http-proxy-rules": "^1.1.1",

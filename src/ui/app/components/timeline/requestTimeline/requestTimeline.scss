@@ -1,0 +1,13 @@
+#request-timeline {
+    .request {
+        fill: #0fac50;
+
+        &.error {
+            fill: rgb(117, 29, 29);
+        }
+
+        &.in-flight {
+            fill: #4d4d4d;
+        }
+    }
+}

@@ -3,6 +3,7 @@ import VueRouter, { Location } from "vue-router";
 
 import { RequestListComponent } from "./components/requestList";
 import { RequestsByRuleComponent } from "./components/requestsByRule";
+import { TimelineComponent } from "./components/timeline";
 
 Vue.use(VueRouter);
 
@@ -24,20 +25,9 @@ export function createRouter() {
                 component: RequestsByRuleComponent,
             },
             {
-                path: "/settings",
-                component: { template: "<router-view></router-view>" },
-                children: [
-                    {
-                        name: "settings.home",
-                        path: "",
-                        component: { template: `<p>Todo <br/> <a href="#settings/proxy">Proxy</a></p>` },
-                    },
-                    {
-                        name: "settings.proxy",
-                        path: "proxy",
-                        component: { template: "<p>Todo</p>" },
-                    },
-                ],
+                name: "timeline",
+                path: "/timeline",
+                component: TimelineComponent,
             },
         ],
     });
@@ -55,8 +45,8 @@ export function getRequestsByRuleRouteLocation(): Location {
     };
 }
 
-export function getSettingsRouteLocation(): Location {
+export function getTimelineRouteLocation(): Location {
     return {
-        name: "settings.home",
+        name: "timeline",
     };
 }

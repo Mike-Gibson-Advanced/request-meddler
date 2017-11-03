@@ -2,7 +2,12 @@
     position: absolute;
     top: 5px;
     right: 5px;
-    width: 300px;
+    width: 260px;
+
+    .card {
+        width: 260px;
+        box-shadow: 0 0 1em rgba(0, 0, 0, 0.2);
+    }
 
     .card-body {
         padding: 0.75rem;

@@ -3,7 +3,7 @@
         <div class="col" style="flex: 2">
             <h1>Requests by rule</h1>
 
-            <transition-group v-if="rules.length" tag="div" name="list" class="list-group">
+            <div v-if="rules.length" class="list-group">
                 <a :key="rule.id" v-for="rule in rules" :class="{ active: rule === selectedRule }"
                     class="list-group-item list-group-item-action clickable" @click="select(rule)">
 
@@ -12,7 +12,7 @@
                         <span>{{ rule.requests.length }}</span>
                     </div>
                 </a>
-            </transition-group>
+            </div>
 
             <p v-else class="alert alert-info">
                 No rules to display

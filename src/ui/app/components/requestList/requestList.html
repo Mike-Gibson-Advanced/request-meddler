@@ -3,10 +3,10 @@
         <div class="col">
             <h1>Requests</h1>
 
-            <transition-group v-if="requests.length" tag="div" name="list" class="list-group">
+            <transition-group v-if="requests.length" tag="div" name="list-animation" class="list-group">
                 <a :key="request.id" v-for="request in requests"
                     :class="{ active: request === selectedRequest, 'list-group-item-danger': request.response && request.response.statusCode >= 400 }"
-                    class="list-group-item list-group-item-action clickable" @click="select(request)">
+                    class="list-group-item list-group-item-action clickable list-animation-item" @click="select(request)">
 
                     <div class="d-flex justify-content-between">
                         <strong class="mb-1">{{ request.url }}</strong>

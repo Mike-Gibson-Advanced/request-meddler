@@ -1,6 +1,6 @@
 <div id="questions">
-    <transition-group tag="div" name="list">
-        <div :key="question.id" v-for="question in questionWithDetails" class="card mb-2">
+    <transition-group tag="div" name="list-animation">
+        <div :key="question.id" v-for="question in questionWithDetails" class="card mb-2 list-animation-item">
             <div class="card-body">
                 <div class="card-title mb-1">{{ question.question }}</div>
                 <div class="card-text">

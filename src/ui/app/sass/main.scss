@@ -1,12 +1,30 @@
 @import "~bootstrap/scss/bootstrap";
 
-.list-enter-active, .list-leave-active {
+.list-animation-item {
     transition: transform 0.5s, opacity 0.5s;
 }
-
-.list-enter, .list-leave-to {
+.list-animation-enter, .list-animation-leave-to {
     opacity: 0;
     transform: translateY(-30px);
+}
+.list-animation-leave-active {
+    position: absolute;
+}
+
+.switch-animation-enter-active, .switch-animation-leave-active {
+    transition: transform 0.2s, opacity 0.2s;
+}
+.switch-animation-enter, .switch-animation-leave-to {
+    opacity: 0;
+    transform: translateY(-30px);
+}
+
+.table-animation-item {
+    transition: transform 0.3s, opacity 0.3s;
+}
+.table-animation-enter, .table-animation-leave-to {
+    opacity: 0;
+    transform: translateY(-33px);
 }
 
 .clickable {
