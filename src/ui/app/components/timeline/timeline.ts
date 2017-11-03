@@ -1,5 +1,4 @@
 
-import { distanceInWordsStrict, format } from "date-fns";
 import { IRequest } from "requests";
 import Vue from "vue";
 import { Component, Watch } from "vue-property-decorator";
@@ -25,14 +24,6 @@ export class TimelineComponent extends Vue {
     max: Date = new Date();
 
     private intervalId: any;
-
-    formatDate(date: Date) {
-        return format(date, "HH:mm:ss.SSS");
-    }
-
-    getDuration(requestTime: Date, responseTime: Date) {
-        return distanceInWordsStrict(requestTime, responseTime);
-    }
 
     @Watch("allRequests", { deep: true, immediate: true })
     onAllRequestsChanged() {

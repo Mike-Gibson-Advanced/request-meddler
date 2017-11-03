@@ -20,44 +20,34 @@ import { config as proxyConfig } from "./proxy";
 import { config as rulesConfig } from "./rules";
 import * as actions from "./rules/actions";
 
-proxyConfig.setProxyAddress("http://www.hanselman.com/");
-// proxyConfig.setProxyAddress("http://127.0.0.1:8889");
+// proxyConfig.setProxyAddress("http://www.hanselman.com/");
+proxyConfig.setProxyAddress("http://127.0.0.1:8889");
+
+// rulesConfig.addRule({
+//     description: "All requests",
+//     urlPattern: /.*/,
+//     actions: [
+//         // new DelayAction(1500),
+//         // new DelayAction(1000),
+//         // new DelayAction(500),
+//         new actions.ManualErrorAction(),
+//         // new ForceErrorAction(0.0),
+//         // new actions.ManualDelayAction(),
+//     ],
+// });
 
 rulesConfig.addRule({
-    description: "All requests",
-    urlPattern: /.*/,
+    description: "All API requests",
+    urlPattern: /\/api/i,
     actions: [
-        // new DelayAction(1500),
-        // new DelayAction(1000),
-        // new DelayAction(500),
-        new actions.ManualErrorAction(),
-        // new ForceErrorAction(0.0),
-        // new actions.ManualDelayAction(),
+        new actions.DelayAction(2000),
     ],
 });
 
-        // new DelayAction(1000),
-        // new DelayAction(500),
-
-// rulesConfig.addRule({
-//     description: "All API requests",
-//     urlPattern: /\/api/i,
-//     actions: [
-//         new DelayAction(1000),
-//         new ForceErrorAction(0.2),
-//     ],
-// });
-// rulesConfig.addRule({
-//     description: "Care needs list",
-//     urlPattern: /\/api\/serviceusers\/fake_user\/careneeds/i,
-//     actions: [
-//         new DelayAction(1),
-//         new ForceOutOfOrderAction(4000),
-//     ],
-// });
-
-// rulesConfig.addRule({
-//     description: "Care needs list",
-//     urlPattern: /\/api\/serviceusers\/fake_user\/careneeds/i,
-//     action: new ForceOutOfOrderAction(4000),
-// });
+rulesConfig.addRule({
+    description: "Care needs list",
+    urlPattern: /\/api\/serviceusers\/(.*)\/careneeds$/i,
+    actions: [
+        new actions.ManualDelayAction(30 * 1000),
+    ],
+});

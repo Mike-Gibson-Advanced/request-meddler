@@ -2,7 +2,10 @@ import { IAction, IActionProcessingContext } from "./action";
 
 export class ManualDelayAction implements IAction {
     get description() {
-        return `Manual delay`;
+        return `Manual delay (timeout after ${this.timeoutInMilliseconds} ms)`;
+    }
+
+    constructor(private timeoutInMilliseconds: number = 5000) {
     }
 
     process(
@@ -19,7 +22,7 @@ export class ManualDelayAction implements IAction {
 
             resolved = true;
             next();
-        }, 7000);
+        }, this.timeoutInMilliseconds);
 
         const actions = [
             { value: true, text: "OK", primary: true },

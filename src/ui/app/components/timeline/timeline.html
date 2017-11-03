@@ -6,30 +6,20 @@
             <table class="table table-sm">
                 <thead>
                     <tr>
-                        <th scope="col" style="border-top: 0">#</th>
+                        <th scope="col" style="border-top: 0; width: 50px;">#</th>
                         <th scope="col" style="border-top: 0">URL</th>
-                        <th scope="col" style="border-top: 0">Status Code</th>
-                        <th scope="col" style="border-top: 0">Request start</th>
-                        <th scope="col" style="border-top: 0">Response end</th>
+                        <th scope="col" style="border-top: 0; width: 120px;">Status Code</th>
                         <th scope="col" style="border-top: 0; width: 50%">Timeline</th>
                     </tr>
                 </thead>
                 <tbody is="transition-group" name="table-animation">
                     <tr v-for="request in visibleRequests" :key="request.id" class="table-animation-item">
                         <th scope="row">{{ request.id }}</th>
-                        <td>{{ request.url }}</td>
+                        <td class="ellipsis">
+                            <span :title="request.url">{{ request.url }}</span>
+                        </td>
                         <td :class="{ 'text-danger': request.response && request.response.statusCode >= 400 }">
                             {{ request.response && request.response.statusCode || "-" }}
-                        </td>
-                        <td>{{ formatDate(request.request.time) }}</td>
-                        <td v-if="!request.response" style="text-align: center">
-                            <div class="progress" style="width: 100px;">
-                                <div class="progress-bar progress-bar-striped progress-bar-animated bg-info"
-                                    role="progressbar" style="width: 100%"></div>
-                            </div>
-                        </td>
-                        <td v-if="request.response">
-                            {{ formatDate(request.response.time) }}
                         </td>
                         <td style="padding: 0; background: #e9ecef; height: 33px;">
                             <request-timeline
