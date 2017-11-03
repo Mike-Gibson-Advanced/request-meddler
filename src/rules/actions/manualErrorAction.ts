@@ -20,14 +20,16 @@ export class ManualErrorAction implements IAction {
             context.log("Timeout, not returning error");
             context.cancelConfirm();
 
-            resolved = true;
             next();
+            resolved = true;
         }, 7000);
 
-        context.confirmWithUser("Return error?")
-            .then((returnError) => {
-
-                context.log("returnError:" + returnError);
+        const actions = [
+            { value: true, text: "Yes", primary: true },
+            { value: false, text: "No", primary: false },
+        ];
+        context.askUser("Return error?", actions)
+            .then((returnError: boolean) => {
                 if (resolved) {
                     return;
                 }
@@ -41,6 +43,7 @@ export class ManualErrorAction implements IAction {
                     context.log("Not returning error");
                     next();
                 }
+                resolved = true;
             });
     }
 }

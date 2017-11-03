@@ -1,3 +1,5 @@
+import { IQuestionOption } from "questions";
+
 export interface IAction {
     readonly description: string;
     process(
@@ -8,6 +10,6 @@ export interface IAction {
 
 export interface IActionProcessingContext {
     log(message: string): void;
-    confirmWithUser(question: string): Promise<boolean>;
+    askUser(question: string, options: IQuestionOption[]): Promise<any>;
     cancelConfirm(): void;
 }

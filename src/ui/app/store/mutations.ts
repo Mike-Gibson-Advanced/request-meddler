@@ -1,3 +1,4 @@
+import { IQuestion } from "questions";
 import { IAppliedRulesChanged, IRequest, IResponseDetails } from "requests";
 import { IRule } from "rules";
 import Vue from "vue";
@@ -32,7 +33,7 @@ export const mutations = {
     setRules: (state: State, rules: IRule[]) => {
         state.rules = rules;
     },
-    addQuestion: (state: State, question: { id: number, question: string, sendResult: (result: boolean) => void }) => {
+    addQuestion: (state: State, question: IQuestion) => {
         state.questions.push(question);
     },
     removeQuestion: (state: State, questionId: number) => {

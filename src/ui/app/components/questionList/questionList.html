@@ -2,16 +2,21 @@
     <transition-group tag="div" name="list">
         <div :key="question.id" v-for="question in questionWithDetails" class="card mb-2">
             <div class="card-body">
-                <div class="card-title mb-1"><h5>{{ question.question }}</h5></div>
+                <div class="card-title mb-1">{{ question.question }}</div>
                 <div class="card-text">
-                    <span>ID: {{ question.request.id }}</span>
-                    <br />
-                    <span>URL: {{ question.request.url }}</span>
+                    <small class="text-muted">
+                        <span>ID: {{ question.request.id }}</span>
+                        <br />
+                        <span>URL: {{ question.request.url }}</span>
+                    </small>
                 </div>
             </div>
             <div class="card-footer text-right">
-                <button class="btn btn-primary" @click="yes(question)">Yes</button>
-                <button class="btn btn-secondary" @click="no(question)">No</button>
+                <template v-for="option in question.options">
+                    <button class="btn" :class="option.primary ? 'btn-primary' : 'btn-secondary'"
+                        @click="respond(question.id, option.value)">{{ option.text }}</button>
+                    {{ " " }}
+                </template>
             </div>
         </div>
     </transition-group>

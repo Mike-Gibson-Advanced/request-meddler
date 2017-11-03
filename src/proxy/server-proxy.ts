@@ -1,5 +1,6 @@
 import * as http from "http";
 import * as httpProxy from "http-proxy";
+import { IQuestionOption } from "questions";
 import { proxyLogger as logger } from "../logger";
 import { config as rulesConfig } from "../rules";
 import { emitter } from "../state";
@@ -9,16 +10,18 @@ import { config } from "./config";
 const proxy = httpProxy.createProxy();
 
 proxy.on("proxyRes", function(proxyRes, req, res) {
-    // collect response data
+    const hitId = (<any>req)._hitId;
+
     let proxyResData = "";
     proxyRes.on("data", function(chunk) {
         proxyResData += chunk;
     });
     proxyRes.on("end", () => {
-        const hitId: number = (<any>req)._hitId;
         addHitResponse(hitId, proxyResData, res);
     });
 });
+
+const getRequestLogMessage = (id: number, message: string) => `[Request ${id}] ${message}`;
 
 export const server = http.createServer((req, res) => {
     logger.debug(`matching '${req.url}' ...`);
@@ -31,7 +34,7 @@ export const server = http.createServer((req, res) => {
         // Attach identifier
         (<any>req)._hitId = id;
 
-        const getLogMessage = (message: string) => `[Request ${id}] ${message}`;
+        const getLogMessage = (message: string) => getRequestLogMessage(id, message);
 
         const rules = rulesConfig.findRules(req.url || "");
         logger.debug(getLogMessage(`Found ${rules.length} rule(s) for url '${req.url}'`));
@@ -73,23 +76,18 @@ export const server = http.createServer((req, res) => {
                             const actionLog = (message: string) => logger
                                 .debug(getLogMessage(`[Rule '${current.description}'] ` +
                                     `[Action '${currentAction.description}'] ${message}`));
+
                             const processingContext = {
                                 log: actionLog,
-                                confirmWithUser: (question: string) => {
+                                askUser: (question: string, options: IQuestionOption[]) => {
                                     return new Promise<boolean>((resolve) => {
-                                        // tslint:disable-next-line:no-console
-                                        console.log("asking...", { id: id, question: question });
-                                        emitter.emit("askUser", { id: id, question: question });
-                                        const listener = (response: { id: number, response: boolean }) => {
-                                            if (response.id === id) {
-                                                resolve(response.response);
-                                                emitter.removeListener("userResponse", listener);
-                                            }
-                                        };
-                                        emitter.on("userResponse", listener);
+                                        askUserListeners[id] = resolve;
+                                        actionLog(`Asking '${question}'`);
+                                        emitter.emit("askUser", { id: id, question: question, options: options });
                                     });
                                 },
                                 cancelConfirm: () => {
+                                    delete askUserListeners[id];
                                     emitter.emit("cancelAskUser", { id: id });
                                 },
                             };
@@ -104,12 +102,26 @@ export const server = http.createServer((req, res) => {
             };
         }, next);
 
+        res.on("close", () => {
+            logger.debug(getRequestLogMessage(id, "Request was closed by client"));
+            // Clean up
+            addHitResponse(id, "", res);
+            delete askUserListeners[id];
+            emitter.emit("cancelAskUser", { id: id });
+        });
         startChain();
         return;
     }
 
     writeError(res, 500, "The request url and path did not match any of the listed rules");
 });
+
+emitter.on("userResponse", (response: { id: number, response: any }) => {
+    const resolve = askUserListeners[response.id];
+    resolve && resolve(response.response);
+});
+
+const askUserListeners: { [id: number]: (result: any) => void } = {};
 
 function writeError(res: http.ServerResponse, code: number, content: any) {
     res.setHeader("content-type", "application/json");

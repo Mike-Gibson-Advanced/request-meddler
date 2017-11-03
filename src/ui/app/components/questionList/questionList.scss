@@ -3,4 +3,12 @@
     top: 5px;
     right: 5px;
     width: 300px;
+
+    .card-body {
+        padding: 0.75rem;
+    }
+
+    .card-footer {
+        padding: 0.5rem 0.75rem;
+    }
 }

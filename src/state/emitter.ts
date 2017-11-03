@@ -1,13 +1,14 @@
 import { EventEmitter } from "events";
+import { IQuestion } from "questions";
 import { IAppliedRulesChanged, IRequest, IResponseDetails } from "requests";
 
 interface IEventType {
     "newRequest": IRequest;
     "newResponse": IResponseDetails;
     "appliedRulesChanged": IAppliedRulesChanged;
-    "askUser": { id: number, question: string };
+    "askUser": IQuestion;
     "cancelAskUser": { id: number };
-    "userResponse": { id: number, response: boolean };
+    "userResponse": { id: number, response: any };
 }
 
 type eventType = keyof IEventType;

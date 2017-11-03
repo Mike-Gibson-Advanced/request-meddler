@@ -1,5 +1,6 @@
 import axios from "axios";
 import { ActionContext } from "vuex";
+import * as webSocket from "../webSocket";
 import { State } from "./state";
 
 export const actions = {
@@ -15,9 +16,13 @@ export const actions = {
     },
     respondToQuestion: (
         store: ActionContext<State, State>,
-        payload: { questionId: number, result: boolean }) => {
+        payload: { questionId: number, result: any }) => {
             const question = store.state.questions.find((q) => q.id === payload.questionId);
-            question!.sendResult(payload.result);
+            if (!question) {
+                return;
+            }
+
+            webSocket.trySendMessage("userResponse", { id: payload.questionId, response: payload.result });
             store.commit("removeQuestion", payload.questionId);
         },
 };

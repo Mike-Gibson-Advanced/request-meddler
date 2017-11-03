@@ -62,35 +62,7 @@ const socketServer = new WebSocketServer({ server: server });
 socketServer.on("connection", (socket) => {
     logger.debug("WebSocket connection received");
 
-    function checkCanSend() {
-        if (socket.readyState !== socket.OPEN) {
-            // TODO: Properly implement unsubscribe
-            logger.error("Subscribed web socket client, not in OPEN state");
-            return false;
-        }
-
-        return true;
-    }
-
-    emitter.on("newRequest", (request) => {
-        checkCanSend() && socket.send(JSON.stringify({ type: "newRequest", payload: request }));
-    });
-
-    emitter.on("newResponse", (response) => {
-        checkCanSend() && socket.send(JSON.stringify({ type: "newResponse", payload: response }));
-    });
-
-    emitter.on("appliedRulesChanged", (response) => {
-        checkCanSend() && socket.send(JSON.stringify({ type: "appliedRulesChanged", payload: response }));
-    });
-
-    emitter.on("askUser", (options) => {
-        checkCanSend() && socket.send(JSON.stringify({ type: "askUser", payload: options }));
-    });
-
-    emitter.on("cancelAskUser", (options) => {
-        checkCanSend() && socket.send(JSON.stringify({ type: "cancelAskUser", payload: options }));
-    });
+    connections.push(socket);
 
     socket.on("error", (error) => {
         logger.debug(`WebSocket error occurred: ${error}`);
@@ -109,4 +81,44 @@ socketServer.on("connection", (socket) => {
                 logger.error(`Unexpected message type: '${message.type}'`);
         }
     });
+
+    socket.on("close", () => {
+        const index = connections.indexOf(socket);
+        if (index > -1) {
+            connections.splice(index, 1);
+        }
+    });
+});
+
+const connections: any[] = [];
+function sendToAll(type: string, payload: any) {
+    connections.forEach((socket: WebSocket) => {
+        if (socket.readyState !== socket.OPEN) {
+            // TODO: Properly implement unsubscribe
+            logger.error("Subscribed web socket client, not in OPEN state");
+            return;
+        }
+
+        socket.send(JSON.stringify({ type: type, payload: payload }));
+    });
+}
+
+emitter.on("newRequest", (request) => {
+    sendToAll("newRequest", request);
+});
+
+emitter.on("newResponse", (response) => {
+    sendToAll("newResponse", response);
+});
+
+emitter.on("appliedRulesChanged", (response) => {
+    sendToAll("appliedRulesChanged", response);
+});
+
+emitter.on("askUser", (options) => {
+    sendToAll("askUser", options);
+});
+
+emitter.on("cancelAskUser", (options) => {
+    sendToAll("cancelAskUser", options);
 });
